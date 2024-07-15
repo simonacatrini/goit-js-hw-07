@@ -1,35 +1,32 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
+// Change code below this line
 
-function renderGalleryItems() {
-    const gallery = document.querySelector('.gallery');
+const galleryContainer = document.querySelector(".gallery");
+const galleryItemsMarkup = createGalleryItemsMarkup(galleryItems);
 
-    galleryItems.forEach(item => {
-        
-        const galleryItem = document.createElement('li');
-        galleryItem.classList.add('gallery__item');
+galleryContainer.innerHTML = galleryItemsMarkup;
 
-        const link = document.createElement('a');
-        link.classList.add('gallery__link');
-        link.href = item.original; 
-
-        const image = document.createElement('img');
-        image.classList.add('gallery__image');
-        image.src = item.preview; 
-        image.alt = item.description; 
-        
-        link.appendChild(image);
-        galleryItem.appendChild(link);
-
-        gallery.appendChild(galleryItem);
-    });
-
-    const lightbox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',       
-        captionPosition: 'bottom', 
-        captionDelay: 250,         
-    });
-
-    lightbox.refresh();
+function createGalleryItemsMarkup(items) {
+  return items
+    .map(({ preview, original, description }) => {
+      return `
+      <li class="gallery__item">
+        <a class="gallery__link" href="${original}">
+          <img
+            class="gallery__image"
+            src="${preview}"
+            title="${description}"
+          />
+        </a>
+      </li>
+    `;
+    })
+    .join("");
 }
 
-document.addEventListener('DOMContentLoaded', renderGalleryItems);
+const lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "title", // Folosește atributul alt pentru caption
+  captionDelay: 250, // Întârziere de 250ms pentru afișarea caption-ului
+});
+
+console.log(galleryItems);

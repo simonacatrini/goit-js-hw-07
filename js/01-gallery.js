@@ -1,15 +1,17 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
+// Change code below this line
 
-const galleryContainer = document.querySelector('.gallery');
-const galleryMarkup = createGalleryMarkup(galleryItems);
+const galleryContainer = document.querySelector(".gallery");
+const galleryItemsMarkup = createGalleryItemsMarkup(galleryItems);
 
-galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
+galleryContainer.innerHTML = galleryItemsMarkup;
 
-galleryContainer.addEventListener('click', onGalleryItemClick);
+galleryContainer.addEventListener("click", onGalleryItemClick);
 
-function createGalleryMarkup(items) {
-  return items.map(({ preview, original, description }) => {
-    return `
+function createGalleryItemsMarkup(items) {
+  return items
+    .map(({ preview, original, description }) => {
+      return `
       <li class="gallery__item">
         <a class="gallery__link" href="${original}">
           <img
@@ -21,32 +23,32 @@ function createGalleryMarkup(items) {
         </a>
       </li>
     `;
-  }).join('');
+    })
+    .join("");
 }
 
 function onGalleryItemClick(event) {
   event.preventDefault();
 
-  if (event.target.nodeName !== 'IMG') {
-    return;
-  }
+  const isGalleryImage = event.target.classList.contains("gallery__image");
+  if (!isGalleryImage) return;
 
   const imageSource = event.target.dataset.source;
 
   const instance = basicLightbox.create(`
-    <img src="${imageSource}" width="800" height="600">
-  `, {
-    onShow: (instance) => {
-      document.addEventListener('keydown', onEscKeyPress);
+    <img src="${imageSource}">
+  `);
 
-      function onEscKeyPress(event) {
-        if (event.code === 'Escape') {
-          instance.close();
-          document.removeEventListener('keydown', onEscKeyPress);
-        }
-      }
-    }
-  });
+  console.log("Modal instance created", instance);
 
   instance.show();
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && instance.visible()) {
+      instance.close();
+      console.log("Modal closed");
+    }
+  });
 }
+
+console.log(galleryItems);
